@@ -1,12 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { environment } from '../../environments/environment.prod';
+import { Environmenter } from 'ng-environmenter';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WakelockService implements OnDestroy {
 
-  constructor() { }
+  constructor(
+    private environmenter: Environmenter
+  ) { }
 
   ngOnDestroy() {
     let wakeLock: any = null;
@@ -39,7 +41,7 @@ export class WakelockService implements OnDestroy {
         return controller;
       };
       wakeLock = requestWakeLock();
-      environment.wakeLock = wakeLock;
+      this.environmenter.getGlobalEnvironment().environment.wakeLock = wakeLock;
       console.log('Got the window Wake Lock');
 
     } else if ('wakeLock' in navigator && 'request' in navigator.wakeLock) {
@@ -56,7 +58,7 @@ export class WakelockService implements OnDestroy {
         }
       };
       requestWakeLock().then((wakeLock: any) => {
-        environment.wakeLock = wakeLock;
+        this.environmenter.getGlobalEnvironment().environment.wakeLock = wakeLock;
         console.log('Got the navigator Wake Lock');
       });
 
@@ -72,7 +74,7 @@ export class WakelockService implements OnDestroy {
   public releaseWakeLock(): void {
     let pageWindow: any = window;
     let navigator: any = window.navigator;
-    let wakeLock: any = environment.wakeLock;
+    let wakeLock: any = this.environmenter.getGlobalEnvironment().environment.wakeLock;
 
     if (wakeLock != null) {
       if ('WakeLock' in pageWindow && 'request' in pageWindow.WakeLock) {
@@ -85,7 +87,7 @@ export class WakelockService implements OnDestroy {
         console.log('Released the navigator Wake Lock');
       }
     }
-    environment.wakeLock = null;
+    this.environmenter.getGlobalEnvironment().environment.wakeLock = null;
   }
 
 }

@@ -1,4 +1,9 @@
 import { NgModule } from '@angular/core';
+import { EnvironmenterModule } from 'ng-environmenter';
 
-@NgModule()
+@NgModule({
+  imports: [
+    EnvironmenterModule
+  ]
+})
 export class LibCoreModule { }
