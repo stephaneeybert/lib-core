@@ -31,11 +31,7 @@ export class ScreenDeviceService {
     return this.getDeviceWindowRef().innerWidth;
   }
 
-  public setMetaData(config: any): void {
-    const description: string = config.description;
-    const color: string = config.color;
-    const image: string = config.image;
-    const title: string = config.title;
+  public setMetaData(title: string, description: string, color: string, image: string): void {
     this.title.setTitle(title);
 
     const tags: Array<MetaDefinition> = [
