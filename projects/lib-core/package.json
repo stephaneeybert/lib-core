@@ -1,6 +1,17 @@
 {
   "name": "lib-core",
   "version": "0.0.1",
+  "description": "The lib-core Angular library",
+  "keywords": [
+    "Angular",
+    "Library"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stephaneeyber/lib-core"
+  },
+  "homepage": "",
   "peerDependencies": {
     "@angular/animations": "~9.1.0",
     "@angular/cdk": "^9.2.2",
