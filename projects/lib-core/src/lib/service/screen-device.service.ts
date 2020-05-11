@@ -56,6 +56,10 @@ export class ScreenDeviceService {
     window.location.reload();
   }
 
+  public showElement(elementRef: ElementRef): void {
+    elementRef.nativeElement.style.display = 'block';
+  }
+
   public hideElement(elementRef: ElementRef): void {
     elementRef.nativeElement.style.display = 'none';
   }
