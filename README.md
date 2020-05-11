@@ -4,7 +4,7 @@ Installation instructions
 npm run package
 
 Publish the library
-npm publish ./dist/lib-core/stephaneeybert-lib-core-0.0.1.tgz
+npm publish ./dist/lib-core/stephaneeybert-lib-core...
 
 In the client application
 npm install ng-environmenter
