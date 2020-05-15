@@ -10,6 +10,7 @@ npm run package;
 
 # Publish the library
 npm publish ./dist/lib-core/stephaneeybert-lib-core-
+ng-version-sync-parent
 
 # In the client application
 npm install ng-environmenter
