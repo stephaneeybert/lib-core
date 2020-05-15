@@ -1,26 +1,31 @@
 import { Directive, HostListener, ElementRef, Output, EventEmitter } from '@angular/core';
 
-// Usage: <div libClickOutside="doSomething()"></div>
+// Usage: <div libCoreClickOutside (clickOutsideEvent)="doSomething()"></div>
 
 @Directive({
-  selector: '[libClickOutside]'
+  selector: '[libCoreClickOutside]'
 })
 export class ClickOutsideDirective {
 
-  @Output() clickOutsideEmitter = new EventEmitter<void>();
+  @Output()
+  clickOutsideEvent: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
   constructor(
     private elementRef: ElementRef
   ) { }
 
   // The document prefix is to consider clicks anywhere in the whole page
-  @HostListener('document:click', ['$event'])
-  @HostListener('document:touchstart', ['$event'])
-  public onClickEvent(event: Event) {
-    const clickedInside = this.elementRef.nativeElement.contains(event.target);
-    // If the click was not inside the element then an event is emitted
+  @HostListener('document:touchstart', ['$event', '$event.target'])
+  @HostListener('document:click', ['$event', '$event.target'])
+  public onClickEvent(event: MouseEvent, targetElement: HTMLElement) {
+    if (!targetElement) {
+      return;
+    }
+
+    const clickedInside = this.elementRef.nativeElement.contains(targetElement);
     if (!clickedInside) {
-      this.clickOutsideEmitter.emit();
+    // If the click was not inside the element then an event is emitted
+      this.clickOutsideEvent.emit(event);
     }
   }
 
