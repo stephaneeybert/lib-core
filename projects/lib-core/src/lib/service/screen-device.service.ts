@@ -64,4 +64,11 @@ export class ScreenDeviceService {
     elementRef.nativeElement.style.display = 'none';
   }
 
+  private domRemove(element: Element): void {
+    if (element != null && element.parentElement != null) {
+      element.parentElement.removeChild(element);
+      element.parentElement.innerHTML = '';
+    }
+  }
+
 }

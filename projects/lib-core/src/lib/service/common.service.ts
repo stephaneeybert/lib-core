@@ -10,6 +10,10 @@ export class CommonService {
     return coerceBooleanProperty(value);
   }
 
+  public isNumber(value: any): boolean {
+    return typeof value === 'number';
+  }
+
   public normalizeName(name: string): string {
     return name ? name.replace(/\s/g, '') : '';
   }
