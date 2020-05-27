@@ -60,7 +60,7 @@ export class DownloadService {
     });
   }
 
-  public downloadDataAsBlobWithProgressAndSaveInFile(data: Uint8Array, fileName: string): Observable<Download> {
+  public downloadDataAsBlobWithFakeProgressAndSaveInFile(data: Uint8Array, fileName: string): Observable<Download> {
     return this.getDataAsBlob(data).pipe(
       this.rxjsDataDownload((blob: Blob) => {
         this.save(blob, fileName)
