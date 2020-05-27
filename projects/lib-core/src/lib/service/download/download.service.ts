@@ -1,8 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpEvent, HttpEventType, HttpResponse, HttpProgressEvent } from '@angular/common/http'
+import { HttpClient, HttpEvent } from '@angular/common/http'
 import { Observable, of, asyncScheduler } from 'rxjs';
-import { scan, tap } from 'rxjs/operators';
-import { saveAs } from 'file-saver';
+import { scan, map } from 'rxjs/operators';
 import { Saver, SAVER } from './saver.provider';
 import { Download } from './download';
 import { isHttpProgressEvent, isHttpResponse } from './typeguard';
@@ -61,6 +60,35 @@ export class DownloadService {
     });
   }
 
+  public downloadDataAsBlobWithProgressAndSaveInFile(data: Uint8Array, fileName: string): Observable<Download> {
+    return this.getDataAsBlob(data).pipe(
+      this.rxjsDataDownload((blob: Blob) => {
+        this.save(blob, fileName)
+      })
+    );
+  }
+
+  // The RxJS custom operator returns a function that takes an observable as parameter and that returns another observable
+  // The operator also happen to take an optional parameter which is a function that is then used to persist the downloaded content in to a file without coupling the operator to the persistance implementation
+  private rxjsDataDownload(saver?: (b: Blob) => void): (source: Observable<Blob>) => Observable<Download> {
+    return function(source: Observable<Blob>) {
+      return source.pipe(
+        map((blob: Blob): Download => {
+          // If a saver function is passed in then call it to persist the downloaded content
+          if (saver && blob) {
+            saver(blob)
+          }
+          return {
+            progress: 100,
+            state: 'DONE',
+            content: blob
+          }
+        }
+        )
+      )
+    };
+  }
+
   public downloadUrlAsBlobWithProgressAndSaveInFile(url: string, fileName: string): Observable<Download> {
     return this.httpClient.get(url, {
       reportProgress: true,
@@ -99,7 +127,7 @@ export class DownloadService {
               content: event.body
             }
           }
-          return previous
+          return previous;
         },
         // Seed the first call to scan with a previous object representing the initial state of the downloading
         { state: 'PENDING', progress: 0, content: null }
