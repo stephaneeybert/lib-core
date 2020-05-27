@@ -1,6 +1,6 @@
 {
   "name": "lib-core",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "The lib-core Angular library",
   "scripts": {
     "ng": "ng",
