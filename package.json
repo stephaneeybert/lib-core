@@ -1,6 +1,6 @@
 {
   "name": "lib-core",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "The lib-core Angular library",
   "scripts": {
     "ng": "ng",
@@ -27,6 +27,7 @@
     "@angular/platform-browser": "~9.1.0",
     "@angular/platform-browser-dynamic": "~9.1.0",
     "@angular/router": "~9.1.0",
+    "file-saver": "^2.0.2",
     "ng-environmenter": "^0.1.2",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
