@@ -102,7 +102,8 @@ export class DownloadService {
   }
 
   // The RxJS custom operator returns a function that takes an observable as parameter and that returns another observable
-  // The operator also happen to take an optional parameter which is a function that is then used to persist the downloaded content in to a file without coupling the operator to the persistance implementation
+  // The operator also happen to take an optional parameter which is a function that is
+  // then used to persist the downloaded content in to a file without coupling the operator to the persistance implementation
   private rxjsUrlDownload(saver?: (b: Blob) => void): (source: Observable<HttpEvent<Blob>>) => Observable<Download> {
     return function(source: Observable<HttpEvent<Blob>>) {
       return source.pipe(
