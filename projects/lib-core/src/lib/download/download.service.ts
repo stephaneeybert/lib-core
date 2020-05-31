@@ -5,6 +5,7 @@ import { scan, map } from 'rxjs/operators';
 import { Saver, SAVER } from './saver.provider';
 import { Download } from './download';
 import { isHttpProgressEvent, isHttpResponse } from './typeguard';
+import { ProgressTask } from './progress-task';
 
 @Injectable({
   providedIn: 'root'
@@ -60,33 +61,66 @@ export class DownloadService {
     });
   }
 
-  public downloadDataAsBlobWithFakeProgressAndSaveInFile(data: Uint8Array, fileName: string): Observable<Download> {
-    return this.getDataAsBlob(data).pipe(
-      this.rxjsDataDownload((blob: Blob) => {
+  public downloadObservableDataAsBlobWithProgressAndSaveInFile(progressTask$: Observable<ProgressTask<Uint8Array>>, fileName: string): Observable<Download> {
+    return progressTask$.pipe(
+      this.rxjsBodyAsBlob(),
+      this.rxjsDownload((blob: Blob) => {
         this.save(blob, fileName)
       })
     );
   }
 
-  // The RxJS custom operator returns a function that takes an observable as parameter and that returns another observable
-  // The operator also happen to take an optional parameter which is a function that is then used to persist the downloaded content in to a file without coupling the operator to the persistance implementation
-  private rxjsDataDownload(saver?: (b: Blob) => void): (source: Observable<Blob>) => Observable<Download> {
-    return function(source: Observable<Blob>) {
+  private rxjsBodyAsBlob(): (source: Observable<ProgressTask<Uint8Array>>) => Observable<ProgressTask<Blob>> {
+    return function(source: Observable<ProgressTask<Uint8Array>>) {
       return source.pipe(
-        map((blob: Blob): Download => {
-          // If a saver function is passed in then call it to persist the downloaded content
-          if (saver && blob) {
-            saver(blob)
+          map((progressTask: ProgressTask<Uint8Array>) => {
+          if (!progressTask.taskIsComplete()) {
+            const blobTaskProgress: ProgressTask<Blob> = new ProgressTask<Blob>(progressTask.total, progressTask.loaded, null);
+            return blobTaskProgress;
+          } else {
+            const CONTENT_TYPE: string = 'application/octet-stream';
+            const body: Blob = new Blob([progressTask.body], { type: CONTENT_TYPE });
+            const blobTaskProgress: ProgressTask<Blob> = new ProgressTask<Blob>(progressTask.total, progressTask.loaded, body);
+            return blobTaskProgress;
           }
-          return {
-            progress: 100,
-            state: 'DONE',
-            content: blob
+        })
+      )
+    }
+  }
+
+  private rxjsDownload(saver?: (b: Blob) => void): (source: Observable<ProgressTask<Blob>>) => Observable<Download> {
+    return function(source: Observable<ProgressTask<Blob>>) {
+      return source.pipe(
+        scan((previous: Download, progressTask: ProgressTask<Blob>): Download => {
+          if (!progressTask.taskIsComplete()) {
+            return {
+              progress: progressTask.total ? Math.round((100 * progressTask.loaded) / progressTask.total) : previous.progress,
+              state: 'IN_PROGRESS',
+              content: null
+            }
+          } else {
+            if (saver && progressTask.body) {
+              saver(progressTask.body)
+            }
+            return {
+              progress: 100,
+              state: 'DONE',
+              content: progressTask.body
+            }
           }
-        }
+        },
+        { state: 'PENDING', progress: 0, content: null }
         )
       )
     };
+  }
+
+  public createProgressTask<T>(total: number, loaded: number, body?: T): ProgressTask<T> {
+    if (body) {
+      return new ProgressTask<T>(total, loaded, body);
+    } else {
+      return new ProgressTask<T>(total, loaded);
+    }
   }
 
   public downloadUrlAsBlobWithProgressAndSaveInFile(url: string, fileName: string): Observable<Download> {
