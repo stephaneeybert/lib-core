@@ -153,13 +153,13 @@ export class DownloadService {
           }
           if (isHttpResponse(event)) {
             // If a saver function is passed in then call it to persist the downloaded content
-            if (saver && event.body) {
-              saver(event.body)
+            if (saver && event.content) {
+              saver(event.content)
             }
             return {
               progress: 100,
               state: 'DONE',
-              content: event.body
+              content: event.content
             }
           }
           return previous;
