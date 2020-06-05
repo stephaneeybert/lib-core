@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Environmenter } from 'ng-environmenter';
+import { Meta, MetaDefinition } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,8 @@ import { Environmenter } from 'ng-environmenter';
 export class WakelockService implements OnDestroy {
 
   constructor(
-    private environmenter: Environmenter
+    private environmenter: Environmenter,
+    private meta: Meta
   ) { }
 
   ngOnDestroy() {
@@ -16,6 +18,13 @@ export class WakelockService implements OnDestroy {
     if ('wakeLock' in navigator && 'request' in navigator.wakeLock) {
       wakeLock.removeEventListener('release', this.releasedLockListener);
     }
+  }
+
+  public setMetaToken(token: string): void {
+    const tags: Array<MetaDefinition> = [
+      { httpEquiv: 'origin-trial', content: token }
+    ];
+    tags.forEach((tag: MetaDefinition) => this.meta.updateTag(tag));
   }
 
   public requestWakeLock(): void {
