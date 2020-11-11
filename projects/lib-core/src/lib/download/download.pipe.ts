@@ -10,13 +10,21 @@ export class DownloadProgressMatStatePipe implements PipeTransform {
   ) { }
 
   transform(download: Download): string {
-    return this.downloadService.statePending(download.state) ? PROGRESS_BAR_MODE.BUFFER : PROGRESS_BAR_MODE.DETERMINATE;
+    if (download) {
+      return this.downloadService.statePending(download.state) ? PROGRESS_BAR_MODE.BUFFER : PROGRESS_BAR_MODE.DETERMINATE;
+    } else {
+      return PROGRESS_BAR_MODE.INDETERMINATE;
+    }
   }
 }
 
 @Pipe({name: 'libCoreDownloadProgressMatProgress'})
 export class DownloadProgressMatProgressPipe implements PipeTransform {
   transform(download: Download): number {
-    return download.progress;
+    if (download) {
+      return download.progress;
+    } else {
+      return 0;
+    }
   }
 }
