@@ -1,6 +1,6 @@
 # LibCore
 
-# Bump the version
+# Bump the library project version
 cd projects/lib-core/;
 npm version patch;
 cd ../../;
