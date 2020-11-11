@@ -20,5 +20,5 @@ npm install file-saver
 npm install @stephaneeybert/lib-core
 
 # Serve again the client application
-  Ctrl+C
-  ng serve
+Ctrl+C
+ng serve
