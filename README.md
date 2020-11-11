@@ -18,3 +18,6 @@ npm publish ./dist/lib-core/stephaneeybert-lib-core-
 npm install ng-environmenter
 npm install file-saver
 npm install @stephaneeybert/lib-core
+Serve again the application
+  Ctrl+C
+  ng serve
