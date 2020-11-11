@@ -35,4 +35,12 @@ export class CommonService {
     return Math.random().toString(36).substring(start, start + length);
   }
 
+  public sleep(milliseconds: number): void {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
+
 }
