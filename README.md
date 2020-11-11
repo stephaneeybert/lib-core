@@ -14,10 +14,11 @@ ng-version-sync-parent;
 # Publish the library
 npm publish ./dist/lib-core/stephaneeybert-lib-core-
 
-# In the client application
+# Install the dependencies in the client application
 npm install ng-environmenter
 npm install file-saver
 npm install @stephaneeybert/lib-core
-Serve again the application
+
+# Serve again the client application
   Ctrl+C
   ng serve
