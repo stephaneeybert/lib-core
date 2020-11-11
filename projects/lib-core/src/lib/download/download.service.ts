@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpEvent } from '@angular/common/http'
 import { Observable, of, asyncScheduler } from 'rxjs';
-import { scan, map, delay } from 'rxjs/operators';
+import { scan, map } from 'rxjs/operators';
 import { Saver, SAVER } from './saver.provider';
 import { Download } from './download';
 import { isHttpProgressEvent, isHttpResponse } from './typeguard';
@@ -74,9 +74,8 @@ export class DownloadService {
     });
   }
 
-  public downloadObservableDataAsBlobWithProgressAndSaveInFile(progressTask$: Observable<ProgressTask<Uint8Array>>, fileName: string, msDelay: number = 0): Observable<Download> {
+  public downloadObservableDataAsBlobWithProgressAndSaveInFile(progressTask$: Observable<ProgressTask<Uint8Array>>, fileName: string): Observable<Download> {
     return progressTask$.pipe(
-      delay(msDelay),
       this.rxjsBodyAsBlob(),
       this.rxjsDownload((blob: Blob) => {
         this.save(blob, fileName)
