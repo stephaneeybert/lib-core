@@ -1,11 +1,24 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpEvent } from '@angular/common/http'
 import { Observable, of, asyncScheduler } from 'rxjs';
-import { scan, map } from 'rxjs/operators';
+import { scan, map, delay } from 'rxjs/operators';
 import { Saver, SAVER } from './saver.provider';
 import { Download } from './download';
 import { isHttpProgressEvent, isHttpResponse } from './typeguard';
 import { ProgressTask } from './progress-task';
+
+export enum PROGRESS_BAR_STATE {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE'
+}
+
+export enum PROGRESS_BAR_MODE {
+  DETERMINATE = 'determinate',
+  INDETERMINATE = 'indeterminate',
+  BUFFER = 'buffer',
+  QUERY = 'query'
+}
 
 @Injectable({
   providedIn: 'root'
@@ -61,8 +74,9 @@ export class DownloadService {
     });
   }
 
-  public downloadObservableDataAsBlobWithProgressAndSaveInFile(progressTask$: Observable<ProgressTask<Uint8Array>>, fileName: string): Observable<Download> {
+  public downloadObservableDataAsBlobWithProgressAndSaveInFile(progressTask$: Observable<ProgressTask<Uint8Array>>, fileName: string, msDelay: number = 0): Observable<Download> {
     return progressTask$.pipe(
+      delay(msDelay),
       this.rxjsBodyAsBlob(),
       this.rxjsDownload((blob: Blob) => {
         this.save(blob, fileName)
@@ -95,7 +109,7 @@ export class DownloadService {
           if (!progressTask.taskIsComplete()) {
             return {
               progress: progressTask.total ? Math.round((100 * progressTask.loaded) / progressTask.total) : previous.progress,
-              state: 'IN_PROGRESS',
+              state: PROGRESS_BAR_STATE.IN_PROGRESS,
               content: null
             }
           } else {
@@ -104,15 +118,31 @@ export class DownloadService {
             }
             return {
               progress: 100,
-              state: 'DONE',
+              state: PROGRESS_BAR_STATE.DONE,
               content: progressTask.body
             }
           }
         },
-        { state: 'PENDING', progress: 0, content: null }
+        {
+          progress: 0,
+          state: PROGRESS_BAR_STATE.PENDING,
+          content: null
+        }
         )
       )
     };
+  }
+
+  public statePending(state: string): boolean {
+    return PROGRESS_BAR_STATE.PENDING ? true : false;
+  }
+
+  public stateInProgress(state: string): boolean {
+    return PROGRESS_BAR_STATE.IN_PROGRESS ? true : false;
+  }
+
+  public stateDone(state: string): boolean {
+    return PROGRESS_BAR_STATE.DONE ? true : false;
   }
 
   public createProgressTask<T>(total: number, loaded: number, body?: T): ProgressTask<T> {
@@ -147,7 +177,7 @@ export class DownloadService {
             return {
               // Progress is the number of loaded bytes to the total number of bytes
               progress: event.total ? Math.round((100 * event.loaded) / event.total) : previous.progress,
-              state: 'IN_PROGRESS',
+              state: PROGRESS_BAR_STATE.IN_PROGRESS,
               content: null
             }
           }
@@ -158,14 +188,18 @@ export class DownloadService {
             }
             return {
               progress: 100,
-              state: 'DONE',
+              state: PROGRESS_BAR_STATE.DONE,
               content: event.content
             }
           }
           return previous;
         },
         // Seed the first call to scan with a previous object representing the initial state of the downloading
-        { state: 'PENDING', progress: 0, content: null }
+        {
+          progress: 0,
+          state: PROGRESS_BAR_STATE.PENDING,
+          content: null
+        }
         )
       )
     };
