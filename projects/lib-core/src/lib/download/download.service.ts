@@ -134,15 +134,15 @@ export class DownloadService {
   }
 
   public statePending(state: string): boolean {
-    return PROGRESS_BAR_STATE.PENDING ? true : false;
+    return state == PROGRESS_BAR_STATE.PENDING ? true : false;
   }
 
   public stateInProgress(state: string): boolean {
-    return PROGRESS_BAR_STATE.IN_PROGRESS ? true : false;
+    return state == PROGRESS_BAR_STATE.IN_PROGRESS ? true : false;
   }
 
   public stateDone(state: string): boolean {
-    return PROGRESS_BAR_STATE.DONE ? true : false;
+    return state == PROGRESS_BAR_STATE.DONE ? true : false;
   }
 
   public createProgressTask<T>(total: number, loaded: number, body?: T): ProgressTask<T> {
