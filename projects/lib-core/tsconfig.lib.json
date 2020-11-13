@@ -5,11 +5,6 @@
     "target": "es2015",
     "declaration": true,
     "inlineSources": true,
-    "typeRoots": [
-      "typings",
-      "node_modules/@types"
-    ],
-    "types": [],
     "lib": [
       "dom",
       "es2018"
@@ -20,12 +15,4 @@
     "strictMetadataEmit": true,
     "enableResourceInlining": true
   },
-  "exclude": [
-    // IDEs should not type-check the different node_modules directories of the different packages.
-    // This would cause the IDEs to be slower and also linters would check the node_modules.
-    "node_modules/",
-    "typings",
-    "src/test.ts",
-    "**/*.spec.ts"
-  ]
 }
