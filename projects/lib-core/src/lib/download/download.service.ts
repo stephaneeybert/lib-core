@@ -88,11 +88,11 @@ export class DownloadService {
       return source.pipe(
           map((progressTask: ProgressTask<Uint8Array>) => {
           if (!progressTask.taskIsComplete()) {
-            const blobTaskProgress: ProgressTask<Blob> = new ProgressTask<Blob>(progressTask.total, progressTask.loaded, null);
+            const blobTaskProgress: ProgressTask<Blob> = new ProgressTask<Blob>(progressTask.total, progressTask.loaded, undefined);
             return blobTaskProgress;
           } else {
             const CONTENT_TYPE: string = 'application/octet-stream';
-            const body: Blob = new Blob([progressTask.body], { type: CONTENT_TYPE });
+            const body: Blob = new Blob([progressTask.body!], { type: CONTENT_TYPE });
             const blobTaskProgress: ProgressTask<Blob> = new ProgressTask<Blob>(progressTask.total, progressTask.loaded, body);
             return blobTaskProgress;
           }
@@ -118,7 +118,7 @@ export class DownloadService {
             return {
               progress: 100,
               state: PROGRESS_BAR_STATE.DONE,
-              content: progressTask.body
+              content: progressTask.body!
             }
           }
         },

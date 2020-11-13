@@ -1,6 +1,6 @@
 export class ProgressTask<T> {
 
-  body: T | null;
+  body: T | undefined;
   loaded: number;
   total: number;
 
