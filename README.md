@@ -17,7 +17,7 @@ npm publish ./dist/lib-core/stephaneeybert-lib-core-
 # Install the dependencies in the client application
 npm install ng-environmenter
 npm install file-saver
-npm install @stephaneeybert/lib-core
+npm install @stephaneeybert/lib-core@latest
 
 # Serve again the client application
 Ctrl+C
