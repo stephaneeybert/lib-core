@@ -1,6 +1,6 @@
 {
   "name": "lib-core",
-  "version": "0.1.58",
+  "version": "0.1.59",
   "description": "The lib-core Angular library",
   "scripts": {
     "ng": "ng",
@@ -29,7 +29,6 @@
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2",
-
     "@angular/cdk": "^11.0.0",
     "file-saver": "^2.0.5",
     "ng-environmenter": "^0.1.2"

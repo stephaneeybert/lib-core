@@ -10,6 +10,10 @@ export class CommonService {
     return coerceBooleanProperty(value);
   }
 
+  public isSet(value: any): boolean {
+    return value != undefined && value != null && !isNaN(value);
+  }
+
   public isNumber(value: any): boolean {
     return typeof value === 'number';
   }
