@@ -11,6 +11,7 @@ export class CommonService {
   }
 
   public isSet(value: any): boolean {
+    // Depending on its content a non empty array can still be a NaN value
     return value != undefined && value != null && (Array.isArray(value) || !isNaN(value));
   }
 
