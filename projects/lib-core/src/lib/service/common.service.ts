@@ -11,7 +11,7 @@ export class CommonService {
   }
 
   public isSet(value: any): boolean {
-    return value != undefined && value != null && (this.isArray(value) || this.isObject(value) || !isNaN(value));
+    return value != undefined && value != null;
   }
 
   public isArray(value: any): boolean {
