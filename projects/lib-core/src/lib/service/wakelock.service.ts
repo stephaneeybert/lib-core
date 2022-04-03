@@ -62,8 +62,8 @@ export class WakelockService implements OnDestroy {
           wakeLock.addEventListener('release', this.releasedLockListener);
           console.log('The Wake Lock is active');
           return wakeLock;
-        } catch (error) {
-          console.error(`${error.name}, ${error.message}`);
+        } catch (error: any) {
+          console.error(error);
         }
       };
       requestWakeLock().then((wakeLock: any) => {
