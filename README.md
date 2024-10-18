@@ -1,7 +1,10 @@
 # LibCore
 
+# On a newly pulled codebase install the application
+npm install
+
 # Bump the library project version
-cd projects/lib-core/;
+cd ./projects/lib-core/;
 npm version patch;
 cd ../../;
 
