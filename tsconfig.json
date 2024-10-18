@@ -5,6 +5,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
+    "esModuleInterop": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
@@ -12,12 +13,11 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
+    "target": "ES2022",
     "typeRoots": [
       "projects/lib-core/typings",
       "node_modules/@types"
@@ -30,7 +30,8 @@
       "lib-core": [
         "projects/lib-core/src/public-api"
       ]
-    }
+    },
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

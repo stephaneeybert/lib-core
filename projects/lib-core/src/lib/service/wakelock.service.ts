@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Environmenter } from 'ng-environmenter';
 import { Meta, MetaDefinition } from '@angular/platform-browser';
 
 @Injectable({
@@ -7,8 +6,9 @@ import { Meta, MetaDefinition } from '@angular/platform-browser';
 })
 export class WakelockService implements OnDestroy {
 
+  private environment: any;
+
   constructor(
-    private environmenter: Environmenter,
     private meta: Meta
   ) { }
 
@@ -18,6 +18,10 @@ export class WakelockService implements OnDestroy {
     if ('wakeLock' in navigator && 'request' in navigator.wakeLock) {
       wakeLock.removeEventListener('release', this.releasedLockListener);
     }
+  }
+
+  public setEnvironment(environment: any) {
+    this.environment = environment;
   }
 
   public setMetaToken(token: string): void {
@@ -50,7 +54,11 @@ export class WakelockService implements OnDestroy {
         return controller;
       };
       wakeLock = requestWakeLock();
-      this.environmenter.getGlobalEnvironment().environment.wakeLock = wakeLock;
+      if (this.environment) {
+        this.environment.wakeLock = wakeLock;
+      } else {
+        throw new Error('Set the environment using the setEnvironment setter before requesting a lock');
+      }
       console.log('Got the window Wake Lock');
 
     } else if ('wakeLock' in navigator && 'request' in navigator.wakeLock) {
@@ -67,7 +75,7 @@ export class WakelockService implements OnDestroy {
         }
       };
       requestWakeLock().then((wakeLock: any) => {
-        this.environmenter.getGlobalEnvironment().environment.wakeLock = wakeLock;
+        this.environment.wakeLock = wakeLock;
         console.log('Got the navigator Wake Lock');
       });
 
@@ -83,7 +91,7 @@ export class WakelockService implements OnDestroy {
   public releaseWakeLock(): void {
     let pageWindow: any = window;
     let navigator: any = window.navigator;
-    let wakeLock: any = this.environmenter.getGlobalEnvironment().environment.wakeLock;
+    let wakeLock: any = this.environment.wakeLock;
 
     if (wakeLock != null) {
       if ('WakeLock' in pageWindow && 'request' in pageWindow.WakeLock) {
@@ -96,7 +104,7 @@ export class WakelockService implements OnDestroy {
         console.log('Released the navigator Wake Lock');
       }
     }
-    this.environmenter.getGlobalEnvironment().environment.wakeLock = null;
+    this.environment.wakeLock = null;
   }
 
 }

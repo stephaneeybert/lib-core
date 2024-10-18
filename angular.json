@@ -55,12 +55,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/app-core",
+            "outputPath": {
+              "base": "dist/app-core"
+            },
             "index": "projects/app-core/src/index.html",
-            "main": "projects/app-core/src/main.ts",
-            "polyfills": "projects/app-core/src/polyfills.ts",
+            "polyfills": [
+              "projects/app-core/src/polyfills.ts"
+            ],
             "tsConfig": "projects/app-core/tsconfig.app.json",
             "aot": true,
             "assets": [
@@ -70,7 +73,8 @@
             "styles": [
               "projects/app-core/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "browser": "projects/app-core/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -86,8 +90,6 @@
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -106,18 +108,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "app-core:build"
+            "buildTarget": "app-core:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "app-core:build:production"
+              "buildTarget": "app-core:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "app-core:build"
+            "buildTarget": "app-core:build"
           }
         },
         "test": {
@@ -166,6 +168,5 @@
     }},
   "cli": {
     "analytics": "47375a79-1ab9-4b2b-9070-ed0d3bf4dfb3"
-  },
-  "defaultProject": "lib-core"
+  }
 }
